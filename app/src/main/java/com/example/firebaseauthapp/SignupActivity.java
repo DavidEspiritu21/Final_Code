@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText, fullNameEditText;
     private Button signupButton;
     private TextView loginTextView;
     private ProgressBar progressBar;
@@ -30,6 +30,7 @@ public class SignupActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
+        fullNameEditText = findViewById(R.id.fullNameEditText);
         signupButton = findViewById(R.id.signupButton);
         loginTextView = findViewById(R.id.loginTextView);
         progressBar = findViewById(R.id.progressBar);
@@ -46,8 +47,14 @@ public class SignupActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+        String fullName = fullNameEditText.getText().toString().trim();
 
         // Validate inputs
+        if (TextUtils.isEmpty(fullName)) {
+            fullNameEditText.setError("Full name is required");
+            return;
+        }
+
         if (TextUtils.isEmpty(email)) {
             emailEditText.setError("Email is required");
             return;
@@ -78,7 +85,7 @@ public class SignupActivity extends AppCompatActivity {
         signupButton.setEnabled(false);
 
         // Signup with Firebase
-        FirebaseAuthHelper.getInstance().signUpWithEmail(email, password, new FirebaseAuthHelper.AuthCallback() {
+        FirebaseAuthHelper.getInstance().signUpWithEmail(email, password, fullName, new FirebaseAuthHelper.AuthCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
                 progressBar.setVisibility(View.GONE);

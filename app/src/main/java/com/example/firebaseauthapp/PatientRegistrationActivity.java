@@ -15,7 +15,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class PatientRegistrationActivity extends AppCompatActivity {
 
-    private EditText displayNameEditText;
     private Button completeRegistrationButton;
     private ProgressBar progressBar;
     private TextView patientIdTextView;
@@ -25,7 +24,6 @@ public class PatientRegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_registration);
 
-        displayNameEditText = findViewById(R.id.displayNameEditText);
         completeRegistrationButton = findViewById(R.id.completeRegistrationButton);
         progressBar = findViewById(R.id.progressBar);
         patientIdTextView = findViewById(R.id.patientIdTextView);
@@ -43,18 +41,13 @@ public class PatientRegistrationActivity extends AppCompatActivity {
     }
 
     private void completePatientRegistration(String patientId) {
-        String displayName = displayNameEditText.getText().toString().trim();
-
-        if (displayName.isEmpty()) {
-            displayNameEditText.setError("Please enter your name");
-            return;
-        }
-
         progressBar.setVisibility(android.view.View.VISIBLE);
         completeRegistrationButton.setEnabled(false);
 
         FirebaseUser currentUser = FirebaseAuthHelper.getInstance().getCurrentUser();
         if (currentUser != null) {
+            // Get display name from the current user profile (set during signup)
+            String displayName = currentUser.getDisplayName();
             User user = new User(currentUser.getUid(), currentUser.getEmail(), "patient", displayName);
             user.setPatientId(patientId);
 
