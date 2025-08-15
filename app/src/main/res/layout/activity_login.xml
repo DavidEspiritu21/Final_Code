@@ -52,7 +52,8 @@
         android:layout_height="wrap_content"
         android:text="Login"
         android:textSize="16sp"
-        android:paddingVertical="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:backgroundTint="@color/primary" />
 
     <ProgressBar

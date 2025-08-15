@@ -1,36 +1,84 @@
 {
   "project_info": {
-    "project_number": "YOUR_PROJECT_NUMBER",
-    "project_id": "YOUR_PROJECT_ID",
-    "storage_bucket": "YOUR_STORAGE_BUCKET"
+    "project_number": "844765842087",
+    "firebase_url": "https://log-in-register-firebase-c6e84-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "log-in-register-firebase-c6e84",
+    "storage_bucket": "log-in-register-firebase-c6e84.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "YOUR_MOBILE_SDK_APP_ID",
+        "mobilesdk_app_id": "1:844765842087:android:f53d6ef33ca8c39b7ca982",
         "android_client_info": {
           "package_name": "com.example.firebaseauthapp"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "YOUR_CLIENT_ID",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "YOUR_API_KEY"
+          "current_key": "AIzaSyAiwFQnbnWNIevgRWZYqA24hbCpHIhgCo8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "YOUR_CLIENT_ID",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844765842087:android:3576515a084b5d767ca982",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiwFQnbnWNIevgRWZYqA24hbCpHIhgCo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844765842087:android:9634351dec5f73217ca982",
+        "android_client_info": {
+          "package_name": "com.example.stupid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiwFQnbnWNIevgRWZYqA24hbCpHIhgCo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844765842087:android:534da24ad3a3b4787ca982",
+        "android_client_info": {
+          "package_name": "com.mycompany.thesis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiwFQnbnWNIevgRWZYqA24hbCpHIhgCo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }
