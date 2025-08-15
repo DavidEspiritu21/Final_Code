@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include specific shared preferences, files, and databases -->
+    <!-- <include domain="sharedpref" path="my_prefs.xml"/> -->
+    <!-- <include domain="file" path="my_document.txt"/> -->
+    <!-- <include domain="database" path="my_database.db"/> -->
+
+    <!-- Exclude specific shared preferences, files, and databases -->
+    <!-- <exclude domain="sharedpref" path="device_specific.xml"/> -->
+</full-backup-content>
