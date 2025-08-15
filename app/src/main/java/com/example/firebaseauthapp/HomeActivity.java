@@ -8,12 +8,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.firebaseauthapp.models.User;
 import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private TextView welcomeTextView, emailTextView;
-    private Button logoutButton;
+    private TextView welcomeTextView, emailTextView, roleTextView, patientIdTextView;
+    private Button logoutButton, viewConnectionsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +24,60 @@ public class HomeActivity extends AppCompatActivity {
         // Initialize views
         welcomeTextView = findViewById(R.id.welcomeTextView);
         emailTextView = findViewById(R.id.emailTextView);
+        roleTextView = findViewById(R.id.roleTextView);
+        patientIdTextView = findViewById(R.id.patientIdTextView);
         logoutButton = findViewById(R.id.logoutButton);
+        viewConnectionsButton = findViewById(R.id.viewConnectionsButton);
 
-        // Display user info
-        FirebaseUser currentUser = FirebaseAuthHelper.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            welcomeTextView.setText("Welcome!");
-            emailTextView.setText("Logged in as: " + currentUser.getEmail());
-        }
+        loadUserProfile();
 
         // Set logout listener
         logoutButton.setOnClickListener(v -> logoutUser());
+        viewConnectionsButton.setOnClickListener(v -> viewConnections());
+    }
+
+    private void loadUserProfile() {
+        FirebaseUser currentUser = FirebaseAuthHelper.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            FirebaseFirestoreHelper.getInstance().getUser(currentUser.getUid(), task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    User user = task.getResult().toObject(User.class);
+                    if (user != null) {
+                        welcomeTextView.setText("Welcome, " + user.getDisplayName() + "!");
+                        emailTextView.setText("Email: " + user.getEmail());
+                        roleTextView.setText("Role: " + user.getRole());
+                        
+                        if ("patient".equals(user.getRole())) {
+                            patientIdTextView.setText("Patient ID: " + user.getPatientId());
+                            viewConnectionsButton.setText("View Guardian Requests");
+                        } else {
+                            patientIdTextView.setText("Guardian Dashboard");
+                            viewConnectionsButton.setText("View Connected Patients");
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private void viewConnections() {
+        FirebaseUser currentUser = FirebaseAuthHelper.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            FirebaseFirestoreHelper.getInstance().getUser(currentUser.getUid(), task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    User user = task.getResult().toObject(User.class);
+                    if (user != null) {
+                        if ("patient".equals(user.getRole())) {
+                            // Show connection requests for patients
+                            Toast.makeText(this, "Connection requests feature coming soon!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Show connected patients for guardians
+                            Toast.makeText(this, "Connected patients feature coming soon!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private void logoutUser() {

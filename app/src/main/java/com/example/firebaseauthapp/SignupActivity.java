@@ -85,8 +85,8 @@ public class SignupActivity extends AppCompatActivity {
                 signupButton.setEnabled(true);
                 Toast.makeText(SignupActivity.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
                 
-                // Navigate to home
-                startActivity(new Intent(SignupActivity.this, HomeActivity.class));
+                // Navigate to role selection
+                startActivity(new Intent(SignupActivity.this, RoleSelectionActivity.class));
                 finish();
             }
 

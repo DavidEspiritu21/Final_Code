@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Your Role"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:layout_marginBottom="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select your role to continue"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="48dp"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/patientButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I am a Patient"
+        android:textSize="18sp"
+        android:paddingVertical="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/primary"
+        android:drawableLeft="@drawable/ic_patient"
+        android:drawablePadding="16dp" />
+
+    <Button
+        android:id="@+id/guardianButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I am a Guardian"
+        android:textSize="18sp"
+        android:paddingVertical="16dp"
+        android:backgroundTint="@color/secondary"
+        android:drawableLeft="@drawable/ic_guardian"
+        android:drawablePadding="16dp" />
+
+</LinearLayout>
