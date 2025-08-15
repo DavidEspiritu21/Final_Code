@@ -30,11 +30,16 @@ public class PatientRegistrationActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         patientIdTextView = findViewById(R.id.patientIdTextView);
 
-        // Generate patient ID
-        String patientId = FirebaseFirestoreHelper.getInstance().generatePatientId();
-        patientIdTextView.setText("Your Patient ID: " + patientId);
-
-        completeRegistrationButton.setOnClickListener(v -> completePatientRegistration(patientId));
+        // Generate unique patient ID
+        FirebaseFirestoreHelper.getInstance().generateUniquePatientId(
+            patientId -> {
+                patientIdTextView.setText("Your Patient ID: " + patientId);
+                completeRegistrationButton.setOnClickListener(v -> completePatientRegistration(patientId));
+            },
+            e -> {
+                Toast.makeText(this, "Error generating patient ID: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        );
     }
 
     private void completePatientRegistration(String patientId) {

@@ -37,14 +37,44 @@ public class FirebaseFirestoreHelper {
     }
 
     // Generate unique patient ID
-    public String generatePatientId() {
+    public void generateUniquePatientId(OnSuccessListener<String> successListener, OnFailureListener failureListener) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder();
         Random random = new Random();
+        
+        generatePatientIdRecursive(chars, random, successListener, failureListener);
+    }
+
+    private void generatePatientIdRecursive(String chars, Random random, OnSuccessListener<String> successListener, OnFailureListener failureListener) {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             sb.append(chars.charAt(random.nextInt(chars.length())));
         }
-        return "P" + sb.toString();
+        String patientId = "P" + sb.toString();
+        
+        checkPatientIdExists(patientId, exists -> {
+            if (exists) {
+                // ID exists, generate a new one
+                generatePatientIdRecursive(chars, random, successListener, failureListener);
+            } else {
+                // ID is unique, return it
+                successListener.onSuccess(patientId);
+            }
+        }, failureListener);
+    }
+
+    private void checkPatientIdExists(String patientId, OnSuccessListener<Boolean> resultListener, OnFailureListener failureListener) {
+        db.collection("users")
+                .whereEqualTo("patientId", patientId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        boolean exists = !task.getResult().isEmpty();
+                        resultListener.onSuccess(exists);
+                    } else {
+                        failureListener.onFailure(task.getException());
+                    }
+                })
+                .addOnFailureListener(failureListener);
     }
 
     // Save user profile
