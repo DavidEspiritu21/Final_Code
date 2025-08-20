@@ -1,9 +1,8 @@
 package com.example.firebaseauthapp;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import android.util.Log;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class PatientIdGenerator {
     private static final String TAG = "PatientIdGenerator";
@@ -23,64 +22,102 @@ public class PatientIdGenerator {
     }
     
     public void generateSequentialPatientId(PatientIdCallback callback) {
-        // Get the highest current patient ID by querying all patients and finding the max
-        db.collection("users")
-                .whereEqualTo("role", "patient")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    int maxId = MIN_ID - 1;
-                    
-                    for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                        String patientId = doc.getString("patientId");
-                        if (patientId != null && patientId.startsWith(PREFIX)) {
-                            try {
-                                String numericPart = patientId.substring(1);
-                                int id = Integer.parseInt(numericPart);
-                                if (id > maxId && id <= MAX_ID) {
-                                    maxId = id;
+        try {
+            // Start with a safe default
+            int nextId = MIN_ID;
+            
+            // Query for existing patient IDs
+            db.collection("users")
+                    .whereEqualTo("role", "patient")
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        try {
+                            int maxId = MIN_ID - 1;
+                            
+                            // Process all documents to find the highest ID
+                            for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                Object patientIdObj = doc.get("patientId");
+                                if (patientIdObj != null) {
+                                    String patientId = patientIdObj.toString();
+                                    if (patientId.startsWith(PREFIX) && patientId.length() == 7) {
+                                        try {
+                                            String numericStr = patientId.substring(1);
+                                            int id = Integer.parseInt(numericStr);
+                                            if (id >= MIN_ID && id <= MAX_ID && id > maxId) {
+                                                maxId = id;
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            Log.w(TAG, "Invalid patient ID format: " + patientId);
+                                        }
+                                    }
                                 }
-                            } catch (NumberFormatException e) {
-                                // Skip invalid IDs
                             }
+                            
+                            // Calculate next ID
+                            if (maxId >= MIN_ID) {
+                                nextId = maxId + 1;
+                            }
+                            
+                            // Check if we've exceeded the range
+                            if (nextId > MAX_ID) {
+                                // Use timestamp-based ID as fallback
+                                long timestamp = System.currentTimeMillis();
+                                nextId = (int)(timestamp % 900000) + 100000;
+                            }
+                            
+                            String newPatientId = PREFIX + String.format("%06d", nextId);
+                            verifyPatientIdUnique(newPatientId, callback);
+                            
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error processing patient IDs", e);
+                            // Fallback to a safe ID
+                            String fallbackId = PREFIX + String.format("%06d", MIN_ID);
+                            verifyPatientIdUnique(fallbackId, callback);
                         }
-                    }
+                    })
+                    .addOnFailureListener(callback::onFailure);
                     
-                    int nextId = maxId + 1;
-                    
-                    if (nextId > MAX_ID) {
-                        // Fallback to timestamp-based ID if we exceed max
-                        generateTimestampBasedPatientId(callback);
-                    } else {
-                        String newPatientId = PREFIX + String.format("%06d", nextId);
-                        verifyPatientIdUnique(newPatientId, callback);
-                    }
-                })
-                .addOnFailureListener(callback::onFailure);
-    }
-    
-    private void generateTimestampBasedPatientId(PatientIdCallback callback) {
-        // Use timestamp as fallback for unique ID
-        long timestamp = System.currentTimeMillis();
-        String patientId = PREFIX + (timestamp % 1000000);
-        verifyPatientIdUnique(patientId, callback);
+        } catch (Exception e) {
+            Log.e(TAG, "Critical error in generateSequentialPatientId", e);
+            callback.onFailure(e);
+        }
     }
     
     private void verifyPatientIdUnique(String patientId, PatientIdCallback callback) {
-        db.collection("users")
-                .whereEqualTo("patientId", patientId)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    if (querySnapshot.isEmpty()) {
-                        callback.onSuccess(patientId);
-                    } else {
-                        // ID exists, generate a new one with offset
-                        String newPatientId = patientId + "1";
-                        if (newPatientId.length() > 7) {
-                            newPatientId = PREFIX + ((Integer.parseInt(patientId.substring(1)) + 1) % 1000000);
+        try {
+            db.collection("users")
+                    .whereEqualTo("patientId", patientId)
+                    .limit(1)
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        if (querySnapshot.isEmpty()) {
+                            callback.onSuccess(patientId);
+                        } else {
+                            // ID exists, try next one
+                            try {
+                                String numericStr = patientId.substring(1);
+                                int currentId = Integer.parseInt(numericStr);
+                                int nextId = currentId + 1;
+                                
+                                if (nextId > MAX_ID) {
+                                    nextId = MIN_ID;
+                                }
+                                
+                                String newPatientId = PREFIX + String.format("%06d", nextId);
+                                verifyPatientIdUnique(newPatientId, callback);
+                            } catch (Exception e) {
+                                // Final fallback
+                                long timestamp = System.currentTimeMillis();
+                                String fallbackId = PREFIX + String.format("%06d", 
+                                    (int)((timestamp % 900000) + 100000));
+                                callback.onSuccess(fallbackId);
+                            }
                         }
-                        verifyPatientIdUnique(newPatientId, callback);
-                    }
-                })
-                .addOnFailureListener(callback::onFailure);
+                    })
+                    .addOnFailureListener(callback::onFailure);
+        } catch (Exception e) {
+            Log.e(TAG, "Critical error in verifyPatientIdUnique", e);
+            callback.onFailure(e);
+        }
     }
 }
