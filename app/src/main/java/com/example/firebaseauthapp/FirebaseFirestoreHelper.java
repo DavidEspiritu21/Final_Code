@@ -47,7 +47,19 @@ public class FirebaseFirestoreHelper {
 
             @Override
             public void onFailure(Exception e) {
-                failureListener.onFailure(e);
+                // Retry with a new generator instance
+                PatientIdGenerator retryGenerator = new PatientIdGenerator();
+                retryGenerator.generateSequentialPatientId(new PatientIdGenerator.PatientIdCallback() {
+                    @Override
+                    public void onSuccess(String patientId) {
+                        successListener.onSuccess(patientId);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        failureListener.onFailure(e);
+                    }
+                });
             }
         });
     }

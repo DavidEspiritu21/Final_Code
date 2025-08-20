@@ -52,7 +52,7 @@ public class PatientRegistrationActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(android.view.View.GONE);
                     completeRegistrationButton.setEnabled(true);
-                    showRetryDialog("Error generating patient ID: " + e.getMessage());
+                    showRetryDialog("Error generating patient ID. Please try again later.");
                 });
             }
         );

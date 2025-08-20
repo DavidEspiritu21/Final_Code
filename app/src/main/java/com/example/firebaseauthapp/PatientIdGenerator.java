@@ -2,7 +2,8 @@ package com.example.firebaseauthapp;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PatientIdGenerator {
     private static final String TAG = "PatientIdGenerator";
@@ -22,33 +23,33 @@ public class PatientIdGenerator {
     }
     
     public void generateSequentialPatientId(PatientIdCallback callback) {
-        // Get the highest current patient ID
+        // Get the highest current patient ID by querying all patients and finding the max
         db.collection("users")
-                .whereGreaterThan("patientId", PREFIX + MIN_ID)
-                .whereLessThan("patientId", PREFIX + MAX_ID)
-                .orderBy("patientId", Query.Direction.DESCENDING)
-                .limit(1)
+                .whereEqualTo("role", "patient")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    int nextId = MIN_ID;
+                    int maxId = MIN_ID - 1;
                     
-                    if (!querySnapshot.isEmpty()) {
-                        String lastId = querySnapshot.getDocuments().get(0).getString("patientId");
-                        if (lastId != null && lastId.startsWith(PREFIX)) {
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        String patientId = doc.getString("patientId");
+                        if (patientId != null && patientId.startsWith(PREFIX)) {
                             try {
-                                int numericPart = Integer.parseInt(lastId.substring(1));
-                                nextId = numericPart + 1;
+                                String numericPart = patientId.substring(1);
+                                int id = Integer.parseInt(numericPart);
+                                if (id > maxId && id <= MAX_ID) {
+                                    maxId = id;
+                                }
                             } catch (NumberFormatException e) {
-                                // Fallback to random generation
-                                generateRandomPatientId(callback);
-                                return;
+                                // Skip invalid IDs
                             }
                         }
                     }
                     
+                    int nextId = maxId + 1;
+                    
                     if (nextId > MAX_ID) {
-                        // Fallback to random generation if we exceed max
-                        generateRandomPatientId(callback);
+                        // Fallback to timestamp-based ID if we exceed max
+                        generateTimestampBasedPatientId(callback);
                     } else {
                         String newPatientId = PREFIX + String.format("%06d", nextId);
                         verifyPatientIdUnique(newPatientId, callback);
@@ -57,16 +58,10 @@ public class PatientIdGenerator {
                 .addOnFailureListener(callback::onFailure);
     }
     
-    private void generateRandomPatientId(PatientIdCallback callback) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder();
-        
-        for (int i = 0; i < 6; i++) {
-            int index = (int) (Math.random() * chars.length());
-            sb.append(chars.charAt(index));
-        }
-        
-        String patientId = PREFIX + sb.toString();
+    private void generateTimestampBasedPatientId(PatientIdCallback callback) {
+        // Use timestamp as fallback for unique ID
+        long timestamp = System.currentTimeMillis();
+        String patientId = PREFIX + (timestamp % 1000000);
         verifyPatientIdUnique(patientId, callback);
     }
     
@@ -78,8 +73,12 @@ public class PatientIdGenerator {
                     if (querySnapshot.isEmpty()) {
                         callback.onSuccess(patientId);
                     } else {
-                        // ID exists, try again
-                        generateRandomPatientId(callback);
+                        // ID exists, generate a new one with offset
+                        String newPatientId = patientId + "1";
+                        if (newPatientId.length() > 7) {
+                            newPatientId = PREFIX + ((Integer.parseInt(patientId.substring(1)) + 1) % 1000000);
+                        }
+                        verifyPatientIdUnique(newPatientId, callback);
                     }
                 })
                 .addOnFailureListener(callback::onFailure);
