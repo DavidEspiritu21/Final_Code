@@ -3,6 +3,7 @@ package com.example.firebaseauthapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private TextView welcomeTextView, emailTextView, roleTextView, patientIdTextView;
     private Button logoutButton, viewConnectionsButton;
+    private ImageButton profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +30,16 @@ public class HomeActivity extends AppCompatActivity {
         patientIdTextView = findViewById(R.id.patientIdTextView);
         logoutButton = findViewById(R.id.logoutButton);
         viewConnectionsButton = findViewById(R.id.viewConnectionsButton);
+        profileButton = findViewById(R.id.profileButton);
 
         loadUserProfile();
 
         // Set logout listener
         logoutButton.setOnClickListener(v -> logoutUser());
         viewConnectionsButton.setOnClickListener(v -> viewConnections());
+        
+        // Set profile button listener
+        profileButton.setOnClickListener(v -> openProfileActivity());
     }
 
     private void loadUserProfile() {
