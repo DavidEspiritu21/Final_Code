@@ -3,6 +3,7 @@ package com.example.firebaseauthapp;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.concurrent.atomic.AtomicInteger; // Import AtomicInteger
 
 public class PatientIdGenerator {
     private static final String TAG = "PatientIdGenerator";
@@ -23,8 +24,8 @@ public class PatientIdGenerator {
     
     public void generateSequentialPatientId(PatientIdCallback callback) {
         try {
-            // Start with a safe default
-            int nextId = MIN_ID;
+            // Use AtomicInteger for nextId
+            AtomicInteger nextId = new AtomicInteger(MIN_ID);
             
             // Query for existing patient IDs
             db.collection("users")
@@ -55,17 +56,17 @@ public class PatientIdGenerator {
                             
                             // Calculate next ID
                             if (maxId >= MIN_ID) {
-                                nextId = maxId + 1;
+                                nextId.set(maxId + 1); // Use .set() for AtomicInteger
                             }
                             
                             // Check if we've exceeded the range
-                            if (nextId > MAX_ID) {
+                            if (nextId.get() > MAX_ID) { // Use .get() for AtomicInteger
                                 // Use timestamp-based ID as fallback
                                 long timestamp = System.currentTimeMillis();
-                                nextId = (int)(timestamp % 900000) + 100000;
+                                nextId.set((int)(timestamp % 900000) + 100000); // Use .set()
                             }
                             
-                            String newPatientId = PREFIX + String.format("%06d", nextId);
+                            String newPatientId = PREFIX + String.format("%06d", nextId.get()); // Use .get()
                             verifyPatientIdUnique(newPatientId, callback);
                             
                         } catch (Exception e) {
@@ -97,13 +98,13 @@ public class PatientIdGenerator {
                             try {
                                 String numericStr = patientId.substring(1);
                                 int currentId = Integer.parseInt(numericStr);
-                                int nextId = currentId + 1;
+                                int nextVal = currentId + 1; // Renamed to avoid confusion
                                 
-                                if (nextId > MAX_ID) {
-                                    nextId = MIN_ID;
+                                if (nextVal > MAX_ID) {
+                                    nextVal = MIN_ID;
                                 }
                                 
-                                String newPatientId = PREFIX + String.format("%06d", nextId);
+                                String newPatientId = PREFIX + String.format("%06d", nextVal);
                                 verifyPatientIdUnique(newPatientId, callback);
                             } catch (Exception e) {
                                 // Final fallback

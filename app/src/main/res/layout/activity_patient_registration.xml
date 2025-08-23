@@ -20,27 +20,15 @@
             android:textColor="@color/primary"
             android:layout_marginBottom="32dp" />
 
-        <TextView
-            android:id="@+id/patientIdTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your Patient ID: P12345678"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp"
-            android:padding="16dp"
-            android:background="@drawable/patient_id_background"
-            android:textAlignment="center" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please save this Patient ID. Guardians will need this to connect with you."
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:layout_marginBottom="24dp"
-            android:textAlignment="center" />
+            android:text="Please save this Patient ID. Guardians will need this to connect with you."
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/completeRegistrationButton"

@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// Added import for ProfileActivity
+import com.example.firebaseauthapp.ProfileActivity; 
 import com.example.firebaseauthapp.models.User;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -93,5 +95,11 @@ public class HomeActivity extends AppCompatActivity {
         // Navigate back to login
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         finish();
+    }
+
+    // Added method to open ProfileActivity
+    private void openProfileActivity() {
+        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 }
