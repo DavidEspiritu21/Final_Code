@@ -3,7 +3,7 @@ package com.example.firebaseauthapp;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.concurrent.atomic.AtomicInteger; // Import AtomicInteger
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PatientIdGenerator {
     private static final String TAG = "PatientIdGenerator";

@@ -131,6 +131,11 @@ public class FirebaseFirestoreHelper {
                 .addOnCompleteListener(listener);
     }
 
+    // Accept connection request
+    public void acceptConnectionRequest(String requestId, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+        updateConnectionRequestStatus(requestId, "accepted", successListener);
+    }
+
     // Get connected patients for a guardian
     public void getConnectedPatients(String guardianId, OnCompleteListener<QuerySnapshot> listener) {
         db.collection("connectionRequests")

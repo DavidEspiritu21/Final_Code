@@ -34,8 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="Patient ID"
-            app:helperText="Ask the patient for their Patient ID">
+            android:hint="Patient ID (e.g., P12345678)">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/patientIdEditText"
@@ -43,8 +42,17 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapCharacters"
                 android:maxLength="9" />
-
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/patientInfoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/connectButton"
@@ -72,15 +80,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/patientInfoTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:textAlignment="center" />
 
     </LinearLayout>
 

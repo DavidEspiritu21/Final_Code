@@ -30,6 +30,17 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/patientIdTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Generating Patient ID..."
+            android:textAlignment="center"
+            android:textColor="@color/primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <Button
             android:id="@+id/completeRegistrationButton"
             android:layout_width="match_parent"

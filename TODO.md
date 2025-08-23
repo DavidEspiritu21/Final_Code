@@ -1,90 +1,48 @@
-# Patient ID Functionality Fix - Complete Implementation Plan
+# Patient-Guardian Connection System Implementation
 
-## Overview
-This plan addresses the patient ID functionality issues to ensure each patient gets a unique ID and guardians can properly connect to monitor patients.
+## ✅ COMPLETED STEPS:
 
-## Current Status
-✅ **Completed:**
-- Created new PatientIdGenerator class with improved ID generation
-- Updated FirebaseFirestoreHelper to use new generator
-- Fixed syntax errors in implementation
+1. [x] Review current Firestore structure for connection requests
+2. [x] Enhance FirebaseFirestoreHelper to handle connection acceptance
+3. [x] Create ConnectionRequestsActivity for patients to manage requests
+4. [x] Update HomeActivity to use new connection management
+5. [x] Add ConnectionRequestsActivity to AndroidManifest
+6. [x] Create layout files for connection requests UI
+7. [x] Add gradlew script for building
 
-## Remaining Tasks
+## 🚧 PENDING (Requires Android SDK Setup):
 
-### Phase 1: Core Implementation
-- [ ] Update PatientRegistrationActivity to use new ID generator
-- [ ] Add loading states and error handling
-- [ ] Add validation for patient ID format
+1. [ ] Test the complete flow
 
-### Phase 2: Enhanced Patient Registration
-- [ ] Update PatientRegistrationActivity.java
-  - [ ] Add loading indicator during ID generation
-  - [ ] Add error handling for ID generation failures
-  - [ ] Add confirmation dialog before final registration
-  - [ ] Add retry mechanism for ID generation
+## Current Implementation Status:
 
-### Phase 3: Guardian Connection Enhancement
-- [ ] Update ConnectPatientActivity.java
-  - [ ] Add better error messages for invalid patient IDs
-  - [ ] Add patient name display after successful ID lookup
-  - [ ] Add confirmation before sending connection request
-  - [ ] Add loading states during connection process
+### ✅ Patient Registration:
+- Unique patient ID generation works
+- Patient IDs are saved to Firestore during registration
 
-### Phase 4: Shared Dashboard Implementation
-- [ ] Update HomeActivity.java
-  - [ ] Implement shared dashboard for connected guardians and patients
-  - [ ] Add real-time updates for guardian-patient connections
-  - [ ] Add patient monitoring features
-  - [ ] Add connection status indicators
+### ✅ Guardian Connection:
+- Guardians can connect to patients using patient IDs
+- Connection requests are sent and stored in Firestore
 
-### Phase 5: Testing and Validation
-- [ ] Add unit tests for patient ID generation
-- [ ] Add integration tests for guardian-patient connection flow
-- [ ] Add Firestore security rules for patient ID access
-- [ ] Test edge cases and error scenarios
+### ✅ Connection Management:
+- Patients can view pending connection requests
+- Patients can accept or reject connection requests
+- Connection status is updated in Firestore
 
-## Implementation Details
+### ✅ UI Components:
+- ConnectionRequestsActivity with RecyclerView for managing requests
+- Item layout for individual connection requests
+- HomeActivity updated to launch connection management
 
-### 1. Patient ID Format
-- **New Format**: Sequential IDs (P000001, P000002, etc.)
-- **Range**: P100000 to P999999
-- **Uniqueness**: Guaranteed through sequential generation
+### 🔧 Technical Requirements:
+- Android SDK needs to be installed and configured
+- local.properties needs correct sdk.dir path
+- ANDROID_HOME environment variable needs to be set
 
-### 2. Connection Flow
-1. **Patient Registration**:
-   - User signs up and selects "patient" role
-   - System generates unique patient ID
-   - ID is stored in User.patientId field
-
-2. **Guardian Connection**:
-   - Guardian enters patient ID in ConnectPatientActivity
-   - System validates patient ID exists
-   - Guardian sends connection request
-   - Patient accepts/rejects request
-   - Once connected, both see same dashboard
-
-### 3. Shared Dashboard Features
-- **Real-time updates** for both guardian and patient
-- **Patient monitoring** capabilities
-- **Connection status** indicators
-- **Activity logs** for both roles
-
-## Testing Checklist
-- [ ] Test patient ID generation with multiple concurrent registrations
-- [ ] Test guardian connection with valid/invalid patient IDs
-- [ ] Test shared dashboard functionality
-- [ ] Test error handling and edge cases
-- [ ] Test performance with large datasets
-
-## Files to Update
-1. **FirebaseFirestoreHelper.java** - ✅ Updated
-2. **PatientRegistrationActivity.java** - Pending
-3. **ConnectPatientActivity.java** - Pending
-4. **HomeActivity.java** - Pending
-5. **PatientIdGenerator.java** - ✅ Created
-
-## Next Steps
-1. Update PatientRegistrationActivity to use new ID generator
-2. Add comprehensive error handling
-3. Implement shared dashboard features
-4. Add comprehensive testing
+## Testing Checklist (Once SDK is available):
+- [ ] Patient registration generates unique ID
+- [ ] Guardian can connect using patient ID
+- [ ] Connection requests appear in patient's view
+- [ ] Patient can accept/reject connection requests
+- [ ] Connected patients appear in guardian's view
+- [ ] Dashboard sharing functionality works

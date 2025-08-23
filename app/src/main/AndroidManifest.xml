@@ -19,6 +19,9 @@
             android:name=".ConnectPatientActivity"
             android:exported="false" />
         <activity
+            android:name=".ConnectionRequestsActivity"
+            android:exported="false" />
+        <activity
             android:name=".GuardianRegistrationActivity"
             android:exported="false" />
         <activity

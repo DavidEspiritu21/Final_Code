@@ -88,6 +88,11 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    private void openProfileActivity() {
+        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
     private void logoutUser() {
         FirebaseAuthHelper.getInstance().signOut();
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
@@ -95,11 +100,5 @@ public class HomeActivity extends AppCompatActivity {
         // Navigate back to login
         startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         finish();
-    }
-
-    // Added method to open ProfileActivity
-    private void openProfileActivity() {
-        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-        startActivity(intent);
     }
 }
