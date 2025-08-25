@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity {
 
     private TextView welcomeTextView, emailTextView, roleTextView, patientIdTextView;
-    private Button logoutButton, viewConnectionsButton;
+private Button logoutButton, viewConnectionsButton, sleepMonitoringButton;
     private ImageButton profileButton;
 
     @Override
