@@ -36,45 +36,32 @@ public class FirebaseFirestoreHelper {
         return instance;
     }
 
-    // Generate unique patient ID
+    // Generate unique patient ID using the new generator
     public void generateUniquePatientId(OnSuccessListener<String> successListener, OnFailureListener failureListener) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random = new Random();
-        
-        generatePatientIdRecursive(chars, random, successListener, failureListener);
-    }
-
-    private void generatePatientIdRecursive(String chars, Random random, OnSuccessListener<String> successListener, OnFailureListener failureListener) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        String patientId = "P" + sb.toString();
-        
-        checkPatientIdExists(patientId, exists -> {
-            if (exists) {
-                // ID exists, generate a new one
-                generatePatientIdRecursive(chars, random, successListener, failureListener);
-            } else {
-                // ID is unique, return it
+        PatientIdGenerator generator = new PatientIdGenerator();
+        generator.generateSequentialPatientId(new PatientIdGenerator.PatientIdCallback() {
+            @Override
+            public void onSuccess(String patientId) {
                 successListener.onSuccess(patientId);
             }
-        }, failureListener);
-    }
 
-    private void checkPatientIdExists(String patientId, OnSuccessListener<Boolean> resultListener, OnFailureListener failureListener) {
-        db.collection("users")
-                .whereEqualTo("patientId", patientId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        boolean exists = !task.getResult().isEmpty();
-                        resultListener.onSuccess(exists);
-                    } else {
-                        failureListener.onFailure(task.getException());
+            @Override
+            public void onFailure(Exception e) {
+                // Retry with a new generator instance
+                PatientIdGenerator retryGenerator = new PatientIdGenerator();
+                retryGenerator.generateSequentialPatientId(new PatientIdGenerator.PatientIdCallback() {
+                    @Override
+                    public void onSuccess(String patientId) {
+                        successListener.onSuccess(patientId);
                     }
-                })
-                .addOnFailureListener(failureListener);
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        failureListener.onFailure(e);
+                    }
+                });
+            }
+        });
     }
 
     // Save user profile
@@ -142,6 +129,11 @@ public class FirebaseFirestoreHelper {
                 .whereEqualTo("status", "accepted")
                 .get()
                 .addOnCompleteListener(listener);
+    }
+
+    // Accept connection request
+    public void acceptConnectionRequest(String requestId, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+        updateConnectionRequestStatus(requestId, "accepted", successListener);
     }
 
     // Get connected patients for a guardian

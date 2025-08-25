@@ -82,7 +82,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(String error) {
                 progressBar.setVisibility(View.GONE);
                 loginButton.setEnabled(true);
-                Toast.makeText(LoginActivity.this, "Login failed: " + error, Toast.LENGTH_LONG).show();
+                if (error.contains("no user record")) {
+                    Toast.makeText(LoginActivity.this, "No account found with this email.", Toast.LENGTH_LONG).show();
+                } else if (error.contains("wrong password")) {
+                    Toast.makeText(LoginActivity.this, "Incorrect password. Please try again.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Login failed: " + error, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

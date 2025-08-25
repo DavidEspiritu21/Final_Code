@@ -20,41 +20,26 @@
             android:textColor="@color/primary"
             android:layout_marginBottom="32dp" />
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Please save this Patient ID. Guardians will need this to connect with you."
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/patientIdTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your Patient ID: P12345678"
+            android:layout_marginBottom="24dp"
+            android:text="Generating Patient ID..."
+            android:textAlignment="center"
+            android:textColor="@color/primary"
             android:textSize="20sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginBottom="24dp"
-            android:padding="16dp"
-            android:background="@drawable/patient_id_background"
-            android:textAlignment="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Please save this Patient ID. Guardians will need this to connect with you."
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:layout_marginBottom="24dp"
-            android:textAlignment="center" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Your Name">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/displayNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/completeRegistrationButton"

@@ -3,11 +3,14 @@ package com.example.firebaseauthapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// Added import for ProfileActivity
+import com.example.firebaseauthapp.ProfileActivity; 
 import com.example.firebaseauthapp.models.User;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -15,6 +18,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private TextView welcomeTextView, emailTextView, roleTextView, patientIdTextView;
     private Button logoutButton, viewConnectionsButton;
+    private ImageButton profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +32,16 @@ public class HomeActivity extends AppCompatActivity {
         patientIdTextView = findViewById(R.id.patientIdTextView);
         logoutButton = findViewById(R.id.logoutButton);
         viewConnectionsButton = findViewById(R.id.viewConnectionsButton);
+        profileButton = findViewById(R.id.profileButton);
 
         loadUserProfile();
 
         // Set logout listener
         logoutButton.setOnClickListener(v -> logoutUser());
         viewConnectionsButton.setOnClickListener(v -> viewConnections());
+        
+        // Set profile button listener
+        profileButton.setOnClickListener(v -> openProfileActivity());
     }
 
     private void loadUserProfile() {
@@ -78,6 +86,11 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void openProfileActivity() {
+        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     private void logoutUser() {
